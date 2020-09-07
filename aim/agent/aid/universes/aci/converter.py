@@ -607,6 +607,16 @@ vmmInjectedSvcPort_converter = utils.list_dict(
                    'converter': port,
                    'default': '0'}, },
     ['port', 'protocol', 'target_port'])
+vmmRsVswitchExporterPol_converter = utils.list_dict(
+    'netflow_paths',
+    {'path': {'other': 'tDn'},
+     'active_flow_time_out': {'other': 'activeFlowTimeOut',
+                              'default': 60},
+     'idle_flow_time_out': {'other': 'idleFlowTimeOut',
+                            'default': 15},
+     'sampling_rate': {'other': 'samplingRate',
+                       'default': 0}, },
+    ['path'])
 vmmInjectedSvcEp_converter = utils.list_dict(
     'endpoints',
     {'pod_name': {'other': 'contGrpName'}},
@@ -1047,9 +1057,11 @@ resource_map = {
     }],
     'vmmVSwitchPolicyCont': [{
         'resource': resource.VmmVswitchPolicyGroup,
+        'skip': ['netflow_paths'],
     }],
     'vmmRsVswitchExporterPol': [{
-        'resource': resource.VmmRelationToExporterPol,
+        'resource': resource.VmmVswitchPolicyGroup,
+        'converter': vmmRsVswitchExporterPol_converter,
     }],
     'spanVSrcGrp': [{
         'resource': resource.SpanVsourceGroup,

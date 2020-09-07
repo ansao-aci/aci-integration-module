@@ -115,7 +115,7 @@ class AimManager(object):
                      api_res.QosRequirement,
                      api_res.QosDppPol,
                      api_res.VmmVswitchPolicyGroup,
-                     api_res.VmmRelationToExporterPol,
+                     # api_res.VmmRelationToExporterPol,
                      api_res.SpanVsourceGroup,
                      api_res.SpanVsource,
                      api_res.SpanVdestGroup,

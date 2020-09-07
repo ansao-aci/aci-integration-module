@@ -285,8 +285,8 @@ class SqlAlchemyStore(AimStore):
                     api_res.QosDppPol: models.QosDppPol,
                     api_res.VmmVswitchPolicyGroup: (
                         models.VmmVswitchPolicyGroup),
-                    api_res.VmmRelationToExporterPol: (
-                        models.VmmRelationToExporterPol),
+                    # api_res.VmmRelationToExporterPol: (
+                        # models.VmmRelationToExporterPol),
                     api_res.SpanVsourceGroup: models.SpanVsourceGroup,
                     api_res.SpanVsource: models.SpanVsource,
                     api_res.SpanVdestGroup: models.SpanVdestGroup,

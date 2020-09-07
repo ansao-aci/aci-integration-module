@@ -1463,39 +1463,44 @@ class VmmVswitchPolicyGroup(AciResourceBase):
         ('domain_name', t.name))
     other_attributes = t.other(
         ('monitored', t.bool),
-        ('display_name', t.name))
+        ('display_name', t.name),
+        ('netflow_paths', t.list_of_dicts(('path', t.string()),
+                                          ('active_flow_time_out', t.integer),
+                                          ('idle_flow_time_out', t.integer),
+                                          ('sampling_rate', t.integer))))
 
     _aci_mo_name = 'vmmVSwitchPolicyCont'
     _tree_parent = VMMDomain
 
     def __init__(self, **kwargs):
-        super(VmmVswitchPolicyGroup, self).__init__({'monitored': False},
+        super(VmmVswitchPolicyGroup, self).__init__({'monitored': False,
+                                                     'netflow_paths': []},
                                                     **kwargs)
 
 
-class VmmRelationToExporterPol(AciResourceBase):
-    """Resource representing Relationship to VMM Netflow Exporter Policy.
+# class VmmRelationToExporterPol(AciResourceBase):
+    # """Resource representing Relationship to VMM Netflow Exporter Policy.
 
-    Identity attributes are domain_type, domain_name and tDn.
-    """
+    # Identity attributes are domain_type, domain_name and tDn.
+    # """
 
-    identity_attributes = t.identity(
-        ('domain_type', t.name),
-        ('domain_name', t.name),
-        ('netflow_path', t.string()))
-    other_attributes = t.other(
-        ('monitored', t.bool),
-        ('active_flow_time_out', t.integer),
-        ('idle_flow_time_out', t.integer),
-        ('sampling_rate', t.integer))
+    # identity_attributes = t.identity(
+        # ('domain_type', t.name),
+        # ('domain_name', t.name),
+        # ('netflow_path', t.string()))
+    # other_attributes = t.other(
+        # ('monitored', t.bool),
+        # ('active_flow_time_out', t.integer),
+        # ('idle_flow_time_out', t.integer),
+        # ('sampling_rate', t.integer))
 
-    _aci_mo_name = 'vmmRsVswitchExporterPol'
-    _tree_parent = VmmVswitchPolicyGroup
+    # _aci_mo_name = 'vmmRsVswitchExporterPol'
+    # _tree_parent = VmmVswitchPolicyGroup
 
-    def __init__(self, **kwargs):
-        super(VmmRelationToExporterPol, self).__init__(
-            {'monitored': False, 'active_flow_time_out': 60,
-             'sampling_rate': 0, 'idle_flow_time_out': 15}, **kwargs)
+    # def __init__(self, **kwargs):
+        # super(VmmRelationToExporterPol, self).__init__(
+            # {'monitored': False, 'active_flow_time_out': 60,
+             # 'sampling_rate': 0, 'idle_flow_time_out': 15}, **kwargs)
 
 
 class SpanVsourceGroup(AciResourceBase):

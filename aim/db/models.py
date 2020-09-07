@@ -104,6 +104,19 @@ class NetflowVMMExporterPol(model_base.Base, model_base.HasDisplayName,
     ver = sa.Column(sa.String(16))
 
 
+class VmmRelationToExporterPol(model_base.Base):
+    """DB model service_ports used by VmmInjectedService."""
+    __tablename__ = 'aim_vmm_reln_exporter_pol'
+
+    vsw_aim_id = sa.Column(
+        sa.Integer, sa.ForeignKey('aim_vmm_vswitch_pol_grp.aim_id'),
+        primary_key=True)
+    path = sa.Column(sa.String(255), nullable=False, primary_key=True)
+    active_flow_time_out = sa.Column(sa.Integer)
+    idle_flow_time_out = sa.Column(sa.Integer)
+    sampling_rate = sa.Column(sa.Integer)
+
+
 class VmmVswitchPolicyGroup(model_base.Base, model_base.AttributeMixin,
                             model_base.HasAimId, model_base.IsMonitored,
                             model_base.HasDisplayName):
@@ -115,23 +128,50 @@ class VmmVswitchPolicyGroup(model_base.Base, model_base.AttributeMixin,
 
     domain_name = model_base.name_column(nullable=False)
     domain_type = model_base.name_column(nullable=False)
+    
+    paths = orm.relationship(VmmRelationToExporterPol,
+                             backref='vswitch',
+                             cascade='all, delete-orphan',
+                             lazy='joined')
+
+    def from_attr(self, session, res_attr):
+        if 'netflow_paths' in res_attr:
+            paths = []
+            for p in (res_attr.pop('netflow_paths', []) or []):
+                if not (p.get('path')):
+                    continue
+                paths.append(VmmRelationToExporterPol(**p))
+            self.paths = paths
+        # map remaining attributes to model
+        super(VmmVswitchPolicyGroup, self).from_attr(session, res_attr)
+
+    def to_attr(self, session):
+        res_attr = super(VmmVswitchPolicyGroup, self).to_attr(session)
+        for p in res_attr.pop('paths', []):
+            path = {'path': p.path}
+            if p.active_flow_time_out and p.idle_flow_time_out and p.sampling_rate is not None:
+                path['active_flow_time_out'] = p.active_flow_time_out
+                path['idle_flow_time_out'] = p.idle_flow_time_out
+                path['sampling_rate'] = p.sampling_rate
+            res_attr.setdefault('netflow_paths', []).append(path)
+        return res_attr
 
 
-class VmmRelationToExporterPol(model_base.Base, model_base.AttributeMixin,
-                               model_base.HasAimId, model_base.IsMonitored):
-    """DB model for Vmm Relation to Exporter Pol."""
-    __tablename__ = 'aim_vmm_reln_exporter_pol'
-    __table_args__ = (
-        model_base.uniq_column(__tablename__, 'domain_type', 'domain_name',
-                               'netflow_path') +
-        model_base.to_tuple(model_base.Base.__table_args__))
+# class VmmRelationToExporterPol(model_base.Base, model_base.AttributeMixin,
+                               # model_base.HasAimId, model_base.IsMonitored):
+    # """DB model for Vmm Relation to Exporter Pol."""
+    # __tablename__ = 'aim_vmm_reln_exporter_pol'
+    # __table_args__ = (
+        # model_base.uniq_column(__tablename__, 'domain_type', 'domain_name',
+                               # 'netflow_path') +
+        # model_base.to_tuple(model_base.Base.__table_args__))
 
-    domain_name = model_base.name_column(nullable=False)
-    domain_type = model_base.name_column(nullable=False)
-    netflow_path = sa.Column(VARCHAR(512, charset='latin1'), nullable=False)
-    active_flow_time_out = sa.Column(sa.Integer)
-    idle_flow_time_out = sa.Column(sa.Integer)
-    sampling_rate = sa.Column(sa.Integer)
+    # domain_name = model_base.name_column(nullable=False)
+    # domain_type = model_base.name_column(nullable=False)
+    # netflow_path = sa.Column(VARCHAR(512, charset='latin1'), nullable=False)
+    # active_flow_time_out = sa.Column(sa.Integer)
+    # idle_flow_time_out = sa.Column(sa.Integer)
+    # sampling_rate = sa.Column(sa.Integer)
 
 
 class Subnet(model_base.Base, model_base.HasAimId,
