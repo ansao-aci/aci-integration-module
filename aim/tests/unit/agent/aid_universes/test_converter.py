@@ -243,7 +243,7 @@ class TestAciToAimConverterVmmVswitchPolicyGroup(TestAciToAimConverterBase,
     resource_type = resource.VmmVswitchPolicyGroup
     reverse_map_output = [
         {'resource': 'vmmVSwitchPolicyCont',
-        'skip': ['netflowPaths'],
+         'skip': ['netflowPaths'],
          'exceptions': {}},
         {'resource': 'vmmRsVswitchExporterPol',
          'converter': converter.vmmRsVswitchExporterPol_converter,
@@ -276,31 +276,6 @@ class TestAciToAimConverterVmmVswitchPolicyGroup(TestAciToAimConverterBase,
                             'active_flow_time_out': 90,
                             'idle_flow_time_out': 10,
                             'sampling_rate': 2}])]
-
-
-# class TestAciToAimConverterVmmRelationToExporterPol(TestAciToAimConverterBase,
-                                                    # base.TestAimDBBase):
-    # resource_type = resource.VmmRelationToExporterPol
-    # reverse_map_output = [
-        # {'resource': 'vmmRsVswitchExporterPol',
-         # 'exceptions': {}}]
-    # sample_input = [base.TestAimDBBase._get_example_aci_reln_netflow(),
-                    # base.TestAimDBBase._get_example_aci_reln_netflow(
-                        # dn='uni/vmmp-OpenStack1/dom-osd13-fab2/vswitchpolcont'
-                           # '/rsvswitchExporterPol-[uni/infra/vmmexporterpol-'
-                           # 'test2]',
-                        # activeFlowTimeOut=120, idleFlowTimeOut=10,
-                        # samplingRate=5)]
-    # sample_output = [
-        # resource.VmmRelationToExporterPol(
-            # domain_type='OpenStack', domain_name='osd13-fab20',
-            # netflow_path='uni/infra/vmmexporterpol-test',
-            # active_flow_time_out=90, idle_flow_time_out=15, sampling_rate=0),
-        # resource.VmmRelationToExporterPol(
-            # domain_type='OpenStack1', domain_name='osd13-fab2',
-            # netflow_path='uni/infra/vmmexporterpol-test2',
-            # active_flow_time_out=120, idle_flow_time_out=10, sampling_rate=5)
-    # ]
 
 
 class TestAciToAimConverterVRF(TestAciToAimConverterBase, base.TestAimDBBase):
@@ -4269,27 +4244,6 @@ class TestAimToAciConverterVmmVswitchPolicyGroup(TestAimToAciConverterBase,
                   activeFlowTimeOut=90, idleFlowTimeOut=10,
                   samplingRate=8)]
     ]
-
-
-# class TestAimToAciConverterVmmRelationToExporterPol(TestAimToAciConverterBase,
-                                                    # base.TestAimDBBase):
-    # sample_input = [
-        # base.TestAimDBBase._get_example_aim_reln_netflow(),
-        # base.TestAimDBBase._get_example_aim_reln_netflow(
-            # domain_type='OpenStack1', domain_name='osd13-fab2',
-            # netflow_path='uni/infra/vmmexporterpol-test2',
-            # active_flow_time_out=120, idle_flow_time_out=10, sampling_rate=5)]
-
-    # sample_output = [
-        # [_aci_obj('vmmRsVswitchExporterPol',
-                  # dn=('uni/vmmp-OpenStack/dom-osd13-fab20/vswitchpolcont/'
-                      # 'rsvswitchExporterPol-[uni/infra/vmmexporterpol-test]'),
-                  # activeFlowTimeOut=90, idleFlowTimeOut=15, samplingRate=0)],
-        # [_aci_obj('vmmRsVswitchExporterPol',
-                  # dn=('uni/vmmp-OpenStack1/dom-osd13-fab2/vswitchpolcont/'
-                      # 'rsvswitchExporterPol-[uni/infra/vmmexporterpol-test2]'),
-                  # activeFlowTimeOut=120, idleFlowTimeOut=10, samplingRate=5)]
-    # ]
 
 
 def get_example_aim_vmm_inj_cont_group(**kwargs):
